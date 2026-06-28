@@ -876,7 +876,7 @@ with tab3:
 <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:0.25rem;">Safety Stock</div>
 <div style="font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:#f1f5f9;">{ss_res['ss']:,.0f} <span style="font-size:0.9rem;color:#94a3b8;">units</span></div>
 <div style="font-size:0.75rem;color:#64748b;margin:0.3rem 0 0.75rem;">{service_level}% service level | {lead_time}-period lead time</div>
-<div style="background:#f8fafc;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#cbd5e1;line-height:1.9;">
+<div style="background:#0d1724;border:1px solid #1e3a6e;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#60a5fa;line-height:1.9;">
 SS = Z × sigma_D × sqrt(L)<br>
 SS = {z_str} × {rmse_val:.1f} × sqrt({lead_time})<br>
 SS = {z_str} × {rmse_val:.1f} × {np.sqrt(lead_time):.3f}<br>
@@ -890,7 +890,7 @@ SS = {z_str} × {rmse_val:.1f} × {np.sqrt(lead_time):.3f}<br>
 <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:0.25rem;">Reorder Point</div>
 <div style="font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:#f1f5f9;">{ss_res['rop']:,.0f} <span style="font-size:0.9rem;color:#94a3b8;">units</span></div>
 <div style="font-size:0.75rem;color:#64748b;margin:0.3rem 0 0.75rem;">Replenish when inventory falls to this level</div>
-<div style="background:#f8fafc;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#cbd5e1;line-height:1.9;">
+<div style="background:#0d1724;border:1px solid #1e3a6e;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#60a5fa;line-height:1.9;">
 ROP = D_bar × L + SS<br>
 ROP = {profile['mean']:.1f} × {lead_time} + {ss_res['ss']:.1f}<br>
 ROP = {profile['mean']*lead_time:.1f} + {ss_res['ss']:.1f}<br>
@@ -925,14 +925,35 @@ with tab4:
             except Exception as ex:
                 st.error(f"Could not read: {ex}")
     else:
-        default_e = pd.DataFrame({"Period":list(range(1,7)),
-                                   "Forecast":[450,470,430,490,510,480],
-                                   "Actual":[420,490,410,520,495,500]})
-        tracker_df = st.data_editor(default_e, num_rows="dynamic", width='stretch',
-                                     column_config={
-                                         "Forecast": st.column_config.NumberColumn(min_value=0),
-                                         "Actual":   st.column_config.NumberColumn(min_value=0)
-                                     }).dropna()
+        # Manual entry using number inputs — dark-theme safe alternative to st.data_editor
+        st.markdown(f"""<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;
+padding:1rem 1.25rem;margin-bottom:0.75rem;">
+<div style="display:grid;grid-template-columns:80px 1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
+  <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.07em;color:#475569;padding:0 0.25rem;">Period</div>
+  <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.07em;color:#475569;padding:0 0.25rem;">Forecast</div>
+  <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.07em;color:#475569;padding:0 0.25rem;">Actual</div>
+</div></div>""", unsafe_allow_html=True)
+
+        default_forecasts = [450, 470, 430, 490, 510, 480]
+        default_actuals   = [420, 490, 410, 520, 495, 500]
+        n_rows = st.slider("Number of periods", min_value=2, max_value=12, value=6, key="tracker_rows")
+
+        periods_list, forecasts_list, actuals_list = [], [], []
+        for i in range(n_rows):
+            c_p, c_f, c_a = st.columns([1, 2, 2])
+            with c_p:
+                st.markdown(f'<div style="padding:0.6rem 0;font-family:IBM Plex Mono,monospace;font-size:0.85rem;color:#64748b;">P{i+1}</div>', unsafe_allow_html=True)
+            with c_f:
+                fc_val = st.number_input("", min_value=0, value=default_forecasts[i] if i < len(default_forecasts) else 500,
+                                          key=f"fc_{i}", label_visibility="collapsed")
+            with c_a:
+                ac_val = st.number_input("", min_value=0, value=default_actuals[i] if i < len(default_actuals) else 480,
+                                          key=f"ac_{i}", label_visibility="collapsed")
+            periods_list.append(f"P{i+1}")
+            forecasts_list.append(float(fc_val))
+            actuals_list.append(float(ac_val))
+
+        tracker_df = pd.DataFrame({"Period": periods_list, "Forecast": forecasts_list, "Actual": actuals_list})
 
     if tracker_df is not None and len(tracker_df) > 0:
         actual_t = tracker_df["Actual"].values.astype(float)
