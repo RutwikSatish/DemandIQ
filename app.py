@@ -352,7 +352,7 @@ padding:1.25rem 1.25rem;height:100%;">
     # Sample data preview
     st.markdown(f"""
 <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
-color:#94a3b8;margin-bottom:0.75rem;padding-bottom:0.35rem;border-bottom:1px solid #e2e8f0;">
+color:#94a3b8;margin-bottom:0.75rem;padding-bottom:0.35rem;border-bottom:1px solid #1e2d45;">
 Sample Dataset — Component-A (24 Monthly Periods)
 </div>""", unsafe_allow_html=True)
 
@@ -361,13 +361,38 @@ Sample Dataset — Component-A (24 Monthly Periods)
 
     col_table, col_chart = st.columns([1, 2])
     with col_table:
-        st.markdown("""<div style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.5rem;">
-This is the pre-loaded dataset used when you click <b>Load Sample Data</b>. It represents
+        st.markdown("""<div style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.75rem;">
+This is the pre-loaded dataset used when you click <b style="color:#cbd5e1;">Load Sample Data</b>. It represents
 24 months of demand for a manufactured component with realistic variable demand
 (mean ~478 units, CV ~18%) and mild seasonality.
 </div>""", unsafe_allow_html=True)
-        st.dataframe(sd.style.format({"Demand": "{:,.0f}"}),
-                     width='stretch', height=320, hide_index=True)
+
+        # Build HTML table — avoids Streamlit dataframe dark-theme rendering issues
+        rows_html = ""
+        for _, row in sd.iterrows():
+            rows_html += f"""<tr style="border-bottom:1px solid #1e2d45;">
+<td style="padding:0.35rem 0.75rem;color:#94a3b8;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;">{int(row['Period'])}</td>
+<td style="padding:0.35rem 0.75rem;color:#60a5fa;font-size:0.75rem;">{row['SKU']}</td>
+<td style="padding:0.35rem 0.75rem;color:#f1f5f9;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;text-align:right;">{int(row['Demand']):,}</td>
+</tr>"""
+
+        st.markdown(f"""
+<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;
+overflow:hidden;max-height:320px;overflow-y:auto;">
+<table style="width:100%;border-collapse:collapse;">
+<thead>
+<tr style="background:#0d1724;border-bottom:2px solid #1e3a6e;">
+  <th style="padding:0.45rem 0.75rem;text-align:left;font-size:0.68rem;text-transform:uppercase;
+  letter-spacing:0.08em;color:#475569;font-weight:600;">Period</th>
+  <th style="padding:0.45rem 0.75rem;text-align:left;font-size:0.68rem;text-transform:uppercase;
+  letter-spacing:0.08em;color:#475569;font-weight:600;">SKU</th>
+  <th style="padding:0.45rem 0.75rem;text-align:right;font-size:0.68rem;text-transform:uppercase;
+  letter-spacing:0.08em;color:#475569;font-weight:600;">Demand</th>
+</tr>
+</thead>
+<tbody>{rows_html}</tbody>
+</table>
+</div>""", unsafe_allow_html=True)
 
     with col_chart:
         sma6 = pd.Series(demand_arr_preview).rolling(6).mean().values
@@ -384,7 +409,7 @@ This is the pre-loaded dataset used when you click <b>Load Sample Data</b>. It r
         ))
         fig_preview.update_layout(
             height=360, title=dict(text="Component-A — 24-Month Demand History",
-                                   font=dict(size=13, color="#334155")),
+                                   font=dict(size=13, color="#94a3b8")),
             xaxis_title="Period", yaxis_title="Demand (units)",
             **CHART)
         st.plotly_chart(fig_preview, width='stretch')
@@ -632,11 +657,37 @@ padding:0.85rem 1rem;margin-top:0.5rem;">
             if val >= 65: return "color: #d97706; font-weight: 700;"
             return "color: #dc2626; font-weight: 700;"
 
-        styled = (display_df.style
-                  .apply(lambda row: ["background:#f0fdf4;" if row.name == 0 else "" for _ in row], axis=1)
-                  .map(fa_style, subset=["FA%"])
-                  .format({"Vandeput Score":"{:.2f}","MAE":"{:.2f}","Bias":"{:.2f}","RMSE":"{:.2f}"}))
-        st.dataframe(styled, width='stretch')
+        # Build HTML table — dark-theme safe
+        cols = [c for c in display_df.columns if c != "_metrics"]
+        header_html = "".join(f'<th style="padding:0.45rem 0.85rem;text-align:left;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:#475569;font-weight:600;white-space:nowrap;">{c}</th>' for c in cols)
+        rows_html_t = ""
+        for i, (_, row) in enumerate(display_df[cols].iterrows()):
+            bg = "background:#0f2318;" if i == 0 else "background:#111827;"
+            cells = ""
+            for c in cols:
+                val = row[c]
+                # Color FA%
+                if c == "FA%":
+                    try:
+                        fv = float(val)
+                        fc_color = "#22c55e" if fv >= 80 else "#fbbf24" if fv >= 65 else "#f87171"
+                        cell_val = f'<span style="color:{fc_color};font-weight:700;font-family:IBM Plex Mono,monospace;">{fv:.1f}%</span>'
+                    except:
+                        cell_val = str(val)
+                elif c in ("Vandeput Score","MAE","Bias","RMSE"):
+                    try: cell_val = f'<span style="font-family:IBM Plex Mono,monospace;">{float(val):.2f}</span>'
+                    except: cell_val = str(val)
+                elif i == 0 and c == "Method":
+                    cell_val = f'<span style="color:#22c55e;font-weight:700;">{val} ★</span>'
+                else:
+                    cell_val = str(val)
+                cells += f'<td style="padding:0.4rem 0.85rem;font-size:0.82rem;color:#cbd5e1;border-bottom:1px solid #1e2d45;">{cell_val}</td>'
+            rows_html_t += f'<tr style="{bg}">{cells}</tr>'
+        st.markdown(f'''<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;overflow:hidden;overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;min-width:600px;">
+<thead><tr style="background:#0d1724;border-bottom:2px solid #1e3a6e;">{header_html}</tr></thead>
+<tbody>{rows_html_t}</tbody>
+</table></div>''', unsafe_allow_html=True)
         cite("Vandeput Score = MAE + |Bias| (primary ranking metric, DFBP Ch. 8–9) | WMAPE = weighted MAE / total demand (handles near-zero, DFBP Ch. 9) | MAPE* displayed for reference only — do not use for ranking (DFBP Ch. 8 caution) | RMSE for safety stock only (FPP3 Ch. 5.8)")
 
         best_row = results_df.iloc[0]
@@ -786,7 +837,23 @@ with tab3:
             "Zone": [{"red":"Stockout Risk","amber":"Overstock Risk","green":"Within Plan"}[z] for z in zone_colors]
         })
         st.session_state["fc_table"] = fc_table
-        st.dataframe(fc_table, width='stretch', hide_index=True)
+        # HTML forecast table
+        fc_cols = ["Period","Point Forecast","Lower 80%","Upper 80%","Lower 95%","Upper 95%","Zone"]
+        zone_colors_map = {"Stockout Risk": "#f87171", "Overstock Risk": "#fbbf24", "Within Plan": "#22c55e"}
+        fc_header = "".join(f'<th style="padding:0.4rem 0.75rem;text-align:{"right" if i>0 else "left"};font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:#475569;font-weight:600;">{c}</th>' for i,c in enumerate(fc_cols))
+        fc_rows = ""
+        for _, row in fc_table.iterrows():
+            zc = zone_colors_map.get(str(row["Zone"]), "#94a3b8")
+            cells = f'<td style="padding:0.38rem 0.75rem;color:#94a3b8;font-family:IBM Plex Mono,monospace;font-size:0.8rem;border-bottom:1px solid #1e2d45;">{row["Period"]}</td>'
+            for col in ["Point Forecast","Lower 80%","Upper 80%","Lower 95%","Upper 95%"]:
+                cells += f'<td style="padding:0.38rem 0.75rem;text-align:right;color:#f1f5f9;font-family:IBM Plex Mono,monospace;font-size:0.8rem;border-bottom:1px solid #1e2d45;">{int(row[col]):,}</td>'
+            cells += f'<td style="padding:0.38rem 0.75rem;font-size:0.78rem;font-weight:600;color:{zc};border-bottom:1px solid #1e2d45;">{row["Zone"]}</td>'
+            fc_rows += f"<tr>{cells}</tr>"
+        st.markdown(f'''<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;overflow:hidden;overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;">
+<thead><tr style="background:#0d1724;border-bottom:2px solid #1e3a6e;">{fc_header}</tr></thead>
+<tbody>{fc_rows}</tbody>
+</table></div>''', unsafe_allow_html=True)
 
     section("Safety Stock Calculator")
     bm = st.session_state.get("best_metrics", {})
@@ -925,7 +992,23 @@ with tab4:
             bmark_rows.append({"Industry": ind, "World-Class FA%": f"{wc}%",
                                 "Your FA%": f"{fa_val:.1f}%" if not np.isnan(fa_val) else "N/A",
                                 "Status": status})
-        st.dataframe(pd.DataFrame(bmark_rows), width='stretch', hide_index=True)
+        bm_df = pd.DataFrame(bmark_rows)
+        bm_header = "".join(f'<th style="padding:0.4rem 0.85rem;text-align:left;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:#475569;font-weight:600;">{c}</th>' for c in bm_df.columns)
+        bm_rows_html = ""
+        status_colors = {"Above world-class":"#22c55e","Within 10pp":"#fbbf24","Below world-class":"#f87171","N/A":"#94a3b8"}
+        for _, row in bm_df.iterrows():
+            sc = status_colors.get(str(row["Status"]),"#94a3b8")
+            bm_rows_html += f'''<tr style="border-bottom:1px solid #1e2d45;">
+<td style="padding:0.4rem 0.85rem;color:#cbd5e1;font-size:0.82rem;">{row["Industry"]}</td>
+<td style="padding:0.4rem 0.85rem;color:#94a3b8;font-family:IBM Plex Mono,monospace;font-size:0.82rem;">{row["World-Class FA%"]}</td>
+<td style="padding:0.4rem 0.85rem;color:#f1f5f9;font-family:IBM Plex Mono,monospace;font-size:0.82rem;font-weight:700;">{row["Your FA%"]}</td>
+<td style="padding:0.4rem 0.85rem;font-size:0.78rem;font-weight:600;color:{sc};">{row["Status"]}</td>
+</tr>'''
+        st.markdown(f'''<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;overflow:hidden;">
+<table style="width:100%;border-collapse:collapse;">
+<thead><tr style="background:#0d1724;border-bottom:2px solid #1e3a6e;">{bm_header}</tr></thead>
+<tbody>{bm_rows_html}</tbody>
+</table></div>''', unsafe_allow_html=True)
         cite("Source: Vandeput, DFBP Ch. 10 — Forecasting benchmarks by industry segment")
     else:
         alert("Enter forecast vs actual data above to compute accuracy metrics.", "info")
@@ -971,7 +1054,24 @@ with tab5:
 
     section("Section 3 — Forward Outlook (Next 4 Periods)")
     if not fc_tbl.empty:
-        st.dataframe(fc_tbl.head(4)[["Period","Point Forecast","Lower 80%","Upper 80%","Zone"]], width='stretch', hide_index=True)
+        sopp_cols = ["Period","Point Forecast","Lower 80%","Upper 80%","Zone"]
+        zone_cm = {"Stockout Risk":"#f87171","Overstock Risk":"#fbbf24","Within Plan":"#22c55e"}
+        sopp_head = "".join(f'<th style="padding:0.4rem 0.75rem;text-align:{"right" if i>0 and i<4 else "left"};font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:#475569;font-weight:600;">{c}</th>' for i,c in enumerate(sopp_cols))
+        sopp_rows = ""
+        for _, row in fc_tbl.head(4).iterrows():
+            zc = zone_cm.get(str(row["Zone"]),"#94a3b8")
+            sopp_rows += f'''<tr style="border-bottom:1px solid #1e2d45;">
+<td style="padding:0.38rem 0.75rem;color:#94a3b8;font-family:IBM Plex Mono,monospace;font-size:0.8rem;">{row["Period"]}</td>
+<td style="padding:0.38rem 0.75rem;text-align:right;color:#f1f5f9;font-family:IBM Plex Mono,monospace;font-size:0.8rem;font-weight:600;">{int(row["Point Forecast"]):,}</td>
+<td style="padding:0.38rem 0.75rem;text-align:right;color:#94a3b8;font-family:IBM Plex Mono,monospace;font-size:0.8rem;">{int(row["Lower 80%"]):,}</td>
+<td style="padding:0.38rem 0.75rem;text-align:right;color:#94a3b8;font-family:IBM Plex Mono,monospace;font-size:0.8rem;">{int(row["Upper 80%"]):,}</td>
+<td style="padding:0.38rem 0.75rem;font-size:0.78rem;font-weight:600;color:{zc};">{row["Zone"]}</td>
+</tr>'''
+        st.markdown(f'''<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;overflow:hidden;">
+<table style="width:100%;border-collapse:collapse;">
+<thead><tr style="background:#0d1724;border-bottom:2px solid #1e3a6e;">{sopp_head}</tr></thead>
+<tbody>{sopp_rows}</tbody>
+</table></div>''', unsafe_allow_html=True)
         cite("Source: FPP3 Ch. 5.5 — Prediction intervals from residual std deviation, assuming normally distributed errors.")
     else:
         alert("Run Tab 3 (Forward Forecast) to populate this section.", "info")
