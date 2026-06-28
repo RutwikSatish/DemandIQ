@@ -40,23 +40,29 @@ def inject_css():
 
 html, body, [class*="css"], .stApp {
     font-family: 'Inter', sans-serif !important;
-    background-color: #f8f9fb !important;
+    background-color: #0a0f1a !important;
+    color: #e2e8f0 !important;
+}
+
+[data-testid="stMain"], [data-testid="stAppViewContainer"],
+[data-testid="block-container"], .main {
+    background-color: #0a0f1a !important;
 }
 
 [data-testid="stSidebar"] {
-    background-color: #0d1b2a !important;
-    border-right: 1px solid #1e3a5f !important;
+    background-color: #060c16 !important;
+    border-right: 1px solid #1e2d45 !important;
 }
-[data-testid="stSidebar"] * { color: #e2e8f0 !important; }
+[data-testid="stSidebar"] * { color: #cbd5e1 !important; }
 [data-testid="stSidebar"] .stSlider label,
 [data-testid="stSidebar"] .stSelectbox label,
 [data-testid="stSidebar"] .stFileUploader label {
-    color: #94a3b8 !important;
+    color: #64748b !important;
     font-size: 0.72rem !important;
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
-[data-testid="stSidebar"] hr { border-color: #1e3a5f !important; }
+[data-testid="stSidebar"] hr { border-color: #1e2d45 !important; }
 [data-testid="stSidebar"] .stButton button {
     background: #1B6EF3 !important;
     color: white !important;
@@ -70,86 +76,135 @@ html, body, [class*="css"], .stApp {
     padding-top: 1rem !important;
     padding-bottom: 2rem !important;
     max-width: 1400px;
+    background-color: #0a0f1a !important;
 }
 
 .stTabs [data-baseweb="tab-list"] {
     gap: 0 !important;
-    border-bottom: 2px solid #e2e8f0 !important;
+    border-bottom: 2px solid #1e2d45 !important;
     background: transparent !important;
 }
 .stTabs [data-baseweb="tab"] {
     font-size: 0.82rem !important;
     font-weight: 600 !important;
     padding: 0.55rem 1.1rem !important;
-    color: #64748b !important;
+    color: #475569 !important;
     background: transparent !important;
     border: none !important;
 }
 .stTabs [aria-selected="true"] {
-    color: #1B6EF3 !important;
-    border-bottom: 2px solid #1B6EF3 !important;
+    color: #3b82f6 !important;
+    border-bottom: 2px solid #3b82f6 !important;
 }
 
 .stDataFrame { border-radius: 8px !important; overflow: hidden; }
+.stDataFrame * { background-color: #111827 !important; color: #cbd5e1 !important; }
 
 .stButton > button {
     border-radius: 8px !important;
     font-weight: 500 !important;
     font-size: 0.85rem !important;
+    background: #1e2d45 !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #2d4a6e !important;
 }
+.stButton > button:hover {
+    background: #1B6EF3 !important;
+    border-color: #1B6EF3 !important;
+    color: white !important;
+}
+
+.stSelectbox > div > div,
+.stNumberInput > div > div > input,
+.stSlider > div { color: #e2e8f0 !important; }
+
+div[data-baseweb="select"] > div {
+    background: #111827 !important;
+    border-color: #1e2d45 !important;
+    color: #e2e8f0 !important;
+}
+
+.stDownloadButton button {
+    background: #1e2d45 !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #2d4a6e !important;
+    border-radius: 8px !important;
+}
+.stDownloadButton button:hover {
+    background: #1B6EF3 !important;
+    border-color: #1B6EF3 !important;
+    color: white !important;
+}
+
+p, div, span, label, h1, h2, h3, h4 {
+    color: #e2e8f0 !important;
+}
+
+[data-testid="stMarkdownContainer"] p { color: #cbd5e1 !important; }
 </style>
 """
     st.html(css)
 
 inject_css()
 
-# ─── COLOUR TOKENS ───────────────────────────────────────────────────────────
+# ─── COLOUR TOKENS (dark theme) ──────────────────────────────────────────────
 
-BLUE   = "#1B6EF3"
-GREEN  = "#16a34a"
-RED    = "#dc2626"
-AMBER  = "#d97706"
-ORANGE = "#ea580c"
-NAVY   = "#0d1b2a"
+BLUE   = "#3b82f6"
+GREEN  = "#22c55e"
+RED    = "#f87171"
+AMBER  = "#fbbf24"
+ORANGE = "#fb923c"
+NAVY   = "#060c16"
+
+# Dark surface colors for inline HTML
+BG_CARD    = "#111827"
+BG_PAGE    = "#0a0f1a"
+BORDER     = "#1e2d45"
+TEXT_PRI   = "#f1f5f9"
+TEXT_SEC   = "#94a3b8"
+TEXT_MUTED = "#475569"
 
 CHART = dict(
-    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#ffffff",
-    font=dict(family="Inter", size=12, color="#334155"),
+    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#111827",
+    font=dict(family="Inter", size=12, color="#94a3b8"),
     margin=dict(l=40, r=20, t=40, b=40), hovermode="x unified",
-    xaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0"),
-    yaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0"),
-    legend=dict(bgcolor="rgba(0,0,0,0)", bordercolor="#e2e8f0", borderwidth=1)
+    xaxis=dict(gridcolor="#1e2d45", linecolor="#1e2d45", color="#94a3b8"),
+    yaxis=dict(gridcolor="#1e2d45", linecolor="#1e2d45", color="#94a3b8"),
+    legend=dict(bgcolor="rgba(0,0,0,0)", bordercolor="#1e2d45", borderwidth=1,
+                font=dict(color="#94a3b8"))
 )
 
 # ─── HTML HELPERS ────────────────────────────────────────────────────────────
 
-def card(title, value, sub="", border_color=BLUE, value_color="#0f172a"):
-    return f"""<div style="background:#fff;border:1px solid #e2e8f0;border-left:4px solid {border_color};
+def card(title, value, sub="", border_color=None, value_color=None):
+    bc = border_color or BLUE
+    vc = value_color or TEXT_PRI
+    return f"""<div style="background:{BG_CARD};border:1px solid {BORDER};border-left:4px solid {bc};
 border-radius:10px;padding:1rem 1.25rem;margin-bottom:0.75rem;">
-<div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:0.2rem;">{title}</div>
-<div style="font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:600;color:{value_color};line-height:1.2;">{value}</div>
-{"<div style='font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;'>"+sub+"</div>" if sub else ""}
+<div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:{TEXT_MUTED};margin-bottom:0.2rem;">{title}</div>
+<div style="font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:600;color:{vc};line-height:1.2;">{value}</div>
+{"<div style='font-size:0.75rem;color:"+TEXT_SEC+";margin-top:0.2rem;'>"+sub+"</div>" if sub else ""}
 </div>"""
 
 def section(text):
     st.markdown(f"""<div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;
-letter-spacing:0.1em;color:#94a3b8;margin:1.5rem 0 0.6rem 0;padding-bottom:0.35rem;
-border-bottom:1px solid #e2e8f0;">{text}</div>""", unsafe_allow_html=True)
+letter-spacing:0.1em;color:{TEXT_MUTED};margin:1.5rem 0 0.6rem 0;padding-bottom:0.35rem;
+border-bottom:1px solid {BORDER};">{text}</div>""", unsafe_allow_html=True)
 
 def insight(text):
-    st.markdown(f"""<div style="background:#eff6ff;border-left:3px solid {BLUE};
-padding:0.5rem 0.85rem;border-radius:0 6px 6px 0;font-size:0.8rem;color:#1e3a8a;
+    st.markdown(f"""<div style="background:#0f1e3a;border-left:3px solid {BLUE};
+padding:0.5rem 0.85rem;border-radius:0 6px 6px 0;font-size:0.8rem;color:#93c5fd;
 margin-top:0.4rem;">{text}</div>""", unsafe_allow_html=True)
 
 def cite(text):
-    st.markdown(f'<div style="font-size:0.68rem;color:#94a3b8;font-style:italic;margin-top:0.25rem;">{text}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="font-size:0.68rem;color:{TEXT_MUTED};font-style:italic;margin-top:0.25rem;">{text}</div>', unsafe_allow_html=True)
 
 def alert(text, kind="info"):
     colors = {
-        "danger":  ("#fef2f2","#fca5a5","#991b1b"),
-        "warning": ("#fffbeb","#fcd34d","#92400e"),
-        "success": ("#f0fdf4","#86efac","#166534"),
-        "info":    ("#eff6ff","#93c5fd","#1e3a8a"),
+        "danger":  ("#2d0f0f","#7f1d1d","#fca5a5"),
+        "warning": ("#2a1f07","#78350f","#fcd34d"),
+        "success": ("#0a2218","#14532d","#86efac"),
+        "info":    ("#0d1b3e","#1e3a8a","#93c5fd"),
     }
     bg, border, fg = colors.get(kind, colors["info"])
     st.markdown(f"""<div style="background:{bg};border:1px solid {border};border-radius:8px;
@@ -168,7 +223,7 @@ for k, v in [("df", None), ("forward_fc", None), ("forward_method", None),
 
 with st.sidebar:
     st.markdown("""<div style="padding:0.5rem 0 1rem;">
-<div style="font-size:1.3rem;font-weight:700;color:#f1f5f9;letter-spacing:-0.02em;">DemandIQ</div>
+<div style="font-size:1.3rem;font-weight:700;color:#0f1724;letter-spacing:-0.02em;">DemandIQ</div>
 <div style="font-size:0.72rem;color:#64748b;margin-top:0.15rem;">Demand Sensing & Forecast Engine</div>
 </div>""", unsafe_allow_html=True)
     st.markdown("---")
@@ -210,8 +265,8 @@ with st.sidebar:
     seasonal_periods = st.slider("Seasonal period", 4, 12, 12)
 
     st.markdown("---")
-    st.markdown("""<div style="font-size:0.68rem;color:#475569;line-height:1.7;">
-Built by <span style="color:#e2e8f0;font-weight:600;">Rutwik Satish</span><br>
+    st.markdown("""<div style="font-size:0.68rem;color:#94a3b8;line-height:1.7;">
+Built by <span style="color:#1e2d45;font-weight:600;">Rutwik Satish</span><br>
 MS Engineering Management<br>
 Grad Certificate — Supply Chain<br>
 Northeastern University
@@ -224,7 +279,7 @@ if st.session_state["df"] is None:
     # Hero
     st.markdown(f"""
 <div style="background:linear-gradient(135deg,{NAVY} 0%,#1B3A6B 60%,#1B6EF3 100%);
-border-radius:16px;padding:3rem 3.5rem;margin-bottom:2rem;color:#fff;">
+border-radius:16px;padding:3rem 3.5rem;margin-bottom:2rem;color:#f1f5f9;">
   <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.15em;
   color:#93c5fd;margin-bottom:0.75rem;font-weight:600;">Enterprise Demand Planning</div>
   <div style="font-size:2.6rem;font-weight:700;letter-spacing:-0.03em;line-height:1.15;
@@ -236,19 +291,19 @@ border-radius:16px;padding:3rem 3.5rem;margin-bottom:2rem;color:#fff;">
   </div>
   <div style="display:flex;gap:1rem;flex-wrap:wrap;">
     <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
-    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#e2e8f0;">
+    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#93c5fd;">
       6 Forecasting Methods
     </div>
     <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
-    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#e2e8f0;">
+    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#93c5fd;">
       Vandeput Score Ranking
     </div>
     <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
-    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#e2e8f0;">
+    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#93c5fd;">
       Safety Stock Calculator
     </div>
     <div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
-    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#e2e8f0;">
+    border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;color:#93c5fd;">
       S&OP Executive Summary
     </div>
   </div>
@@ -256,14 +311,14 @@ border-radius:16px;padding:3rem 3.5rem;margin-bottom:2rem;color:#fff;">
 
     # The problem
     st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+<div style="background:#0d1a2e;border:1px solid #1e2d45;border-radius:12px;
 padding:1.75rem 2rem;margin-bottom:1.5rem;">
   <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;
   color:#94a3b8;margin-bottom:0.5rem;font-weight:700;">The Problem DemandIQ Solves</div>
-  <div style="font-size:1.05rem;font-weight:600;color:#0f172a;margin-bottom:0.75rem;">
+  <div style="font-size:1.05rem;font-weight:600;color:#f1f5f9;margin-bottom:0.75rem;">
     Every demand planner spends hours in Excel doing this manually.
   </div>
-  <div style="font-size:0.88rem;color:#475569;line-height:1.75;max-width:720px;">
+  <div style="font-size:0.88rem;color:#94a3b8;line-height:1.75;max-width:720px;">
     You upload historical demand data. DemandIQ runs six forecasting methods simultaneously —
     from Simple Moving Average to ARIMA — evaluates each one against a holdout period using
     academically validated accuracy metrics, and tells you which method fits your demand pattern
@@ -284,11 +339,11 @@ padding:1.75rem 2rem;margin-bottom:1.5rem;">
     for col, (num, title, desc, color) in zip([col1,col2,col3,col4], steps):
         with col:
             st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+<div style="background:#0d1a2e;border:1px solid #1e2d45;border-radius:12px;
 padding:1.25rem 1.25rem;height:100%;">
   <div style="font-family:'IBM Plex Mono',monospace;font-size:1.6rem;font-weight:700;
   color:{color};margin-bottom:0.5rem;">{num}</div>
-  <div style="font-size:0.88rem;font-weight:600;color:#0f172a;margin-bottom:0.5rem;">{title}</div>
+  <div style="font-size:0.88rem;font-weight:600;color:#f1f5f9;margin-bottom:0.5rem;">{title}</div>
   <div style="font-size:0.78rem;color:#64748b;line-height:1.6;">{desc}</div>
 </div>""", unsafe_allow_html=True)
 
@@ -306,7 +361,7 @@ Sample Dataset — Component-A (24 Monthly Periods)
 
     col_table, col_chart = st.columns([1, 2])
     with col_table:
-        st.markdown("""<div style="font-size:0.78rem;color:#475569;margin-bottom:0.5rem;">
+        st.markdown("""<div style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.5rem;">
 This is the pre-loaded dataset used when you click <b>Load Sample Data</b>. It represents
 24 months of demand for a manufactured component with realistic variable demand
 (mean ~478 units, CV ~18%) and mild seasonality.
@@ -364,13 +419,13 @@ cv_class = utils.classify_cv(profile["cv"])
 # Page header
 st.markdown(f"""
 <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;
-padding-bottom:0.75rem;border-bottom:1px solid #e2e8f0;">
+padding-bottom:0.75rem;border-bottom:1px solid #1e2d45;">
   <div>
-    <div style="font-size:1.4rem;font-weight:700;color:#0f172a;letter-spacing:-0.02em;">DemandIQ</div>
+    <div style="font-size:1.4rem;font-weight:700;color:#f1f5f9;letter-spacing:-0.02em;">DemandIQ</div>
     <div style="font-size:0.78rem;color:#94a3b8;">
-      SKU: <b style="color:#334155;">{df['SKU'].iloc[0]}</b> &nbsp;|&nbsp;
+      SKU: <b style="color:#cbd5e1;">{df['SKU'].iloc[0]}</b> &nbsp;|&nbsp;
       {n} periods &nbsp;|&nbsp;
-      Mean: <b style="color:#334155;">{profile['mean']:.0f}</b> units &nbsp;|&nbsp;
+      Mean: <b style="color:#cbd5e1;">{profile['mean']:.0f}</b> units &nbsp;|&nbsp;
       CV: <b style="color:{cv_class['color']};">{profile['cv']*100:.1f}%</b>
     </div>
   </div>
@@ -402,14 +457,14 @@ with tab1:
     col_left, col_right = st.columns([1, 2])
     with col_left:
         st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-left:5px solid {cv_class['color']};
+<div style="background:#111827;border:1px solid #1e2d45;border-left:5px solid {cv_class['color']};
 border-radius:10px;padding:1.25rem 1.5rem;">
   <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:0.5rem;">Classification</div>
-  <span style="background:{cv_class['color']};color:#fff;font-size:0.85rem;font-weight:600;
+  <span style="background:{cv_class['color']};color:#111827;font-size:0.85rem;font-weight:600;
   padding:0.3rem 0.9rem;border-radius:999px;">{cv_class['label']}</span>
   <div style="font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;
-  color:#0f172a;margin:0.6rem 0 0.25rem;">CV = {profile['cv']:.3f}</div>
-  <div style="font-size:0.82rem;color:#475569;">{cv_class['description']}</div>
+  color:#f1f5f9;margin:0.6rem 0 0.25rem;">CV = {profile['cv']:.3f}</div>
+  <div style="font-size:0.82rem;color:#94a3b8;">{cv_class['description']}</div>
   <div style="font-size:0.68rem;color:#94a3b8;font-style:italic;margin-top:0.5rem;">
     Source: Vandeput, DFBP Ch. 13 — ABC-XYZ segmentation<br>
     CV = std / mean (sample standard deviation)
@@ -418,22 +473,22 @@ border-radius:10px;padding:1.25rem 1.5rem;">
 
     with col_right:
         st.markdown("""
-<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem 1.5rem;">
+<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;padding:1.25rem 1.5rem;">
 <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:0.75rem;">Classification Guide</div>
 <table style="width:100%;font-size:0.8rem;border-collapse:collapse;">
 <tr style="border-bottom:1px solid #e2e8f0;">
-  <th style="text-align:left;padding:0.4rem 0.5rem;color:#64748b;font-weight:600;">Class</th>
-  <th style="text-align:left;padding:0.4rem 0.5rem;color:#64748b;font-weight:600;">CV Range</th>
-  <th style="text-align:left;padding:0.4rem 0.5rem;color:#64748b;font-weight:600;">Interpretation</th>
-  <th style="text-align:left;padding:0.4rem 0.5rem;color:#64748b;font-weight:600;">Recommended Model</th>
+  <th style="text-align:left;padding:0.4rem 0.5rem;color:#94a3b8;font-weight:600;">Class</th>
+  <th style="text-align:left;padding:0.4rem 0.5rem;color:#94a3b8;font-weight:600;">CV Range</th>
+  <th style="text-align:left;padding:0.4rem 0.5rem;color:#94a3b8;font-weight:600;">Interpretation</th>
+  <th style="text-align:left;padding:0.4rem 0.5rem;color:#94a3b8;font-weight:600;">Recommended Model</th>
 </tr>
-<tr style="border-bottom:1px solid #f1f5f9;">
+<tr style="border-bottom:1px solid #1e2d45;">
   <td style="padding:0.4rem 0.5rem;"><span style="color:#16a34a;font-weight:700;">X</span></td>
   <td style="padding:0.4rem 0.5rem;font-family:'IBM Plex Mono',monospace;">&lt; 0.20</td>
   <td style="padding:0.4rem 0.5rem;">Stable — predictable demand</td>
   <td style="padding:0.4rem 0.5rem;">SES or Holt Linear</td>
 </tr>
-<tr style="border-bottom:1px solid #f1f5f9;">
+<tr style="border-bottom:1px solid #1e2d45;">
   <td style="padding:0.4rem 0.5rem;"><span style="color:#d97706;font-weight:700;">Y</span></td>
   <td style="padding:0.4rem 0.5rem;font-family:'IBM Plex Mono',monospace;">0.20 – 0.50</td>
   <td style="padding:0.4rem 0.5rem;">Variable — adaptive methods needed</td>
@@ -498,8 +553,8 @@ with tab2:
 
     section("Cross-Validation Setup")
     st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem 1.25rem;">
-<span style="font-size:0.85rem;color:#334155;">
+<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;padding:1rem 1.25rem;">
+<span style="font-size:0.85rem;color:#cbd5e1;">
 <b>Training:</b> periods 1–{n_train} &nbsp;|&nbsp;
 <b>Holdout:</b> periods {n_train+1}–{n} &nbsp;|&nbsp;
 <b>Holdout size:</b> {n_holdout} period(s)
@@ -525,19 +580,19 @@ with tab2:
             if r.get("error"):
                 alert(f"{r['method']}: {r['error']}", "warning")
             else:
-                st.markdown(f"""<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+                st.markdown(f"""<div style="background:#111827;border:1px solid #1e2d45;border-radius:8px;
 padding:0.85rem 1rem;"><div style="font-size:0.65rem;color:#94a3b8;text-transform:uppercase;
 letter-spacing:0.07em;">{r['method']}</div>
-<div style="font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:#0f172a;margin-top:0.25rem;">
+<div style="font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:#f1f5f9;margin-top:0.25rem;">
 {r.get('params','')}</div></div>""", unsafe_allow_html=True)
 
     if r_arima.get("error"):
         alert(f"ARIMA: {r_arima['error']}", "warning")
     else:
-        st.markdown(f"""<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+        st.markdown(f"""<div style="background:#111827;border:1px solid #1e2d45;border-radius:8px;
 padding:0.85rem 1rem;margin-top:0.5rem;">
 <div style="font-size:0.65rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;">ARIMA (AICc-selected)</div>
-<div style="font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:#0f172a;margin-top:0.25rem;">{r_arima.get('params','')}</div>
+<div style="font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:#f1f5f9;margin-top:0.25rem;">{r_arima.get('params','')}</div>
 <div style="font-size:0.68rem;color:#94a3b8;font-style:italic;margin-top:0.25rem;">AICc = AIC + (2k² + 2k) / (n − k − 1) — Source: FPP3 Ch. 9</div>
 </div>""", unsafe_allow_html=True)
 
@@ -604,12 +659,12 @@ padding:0.85rem 1rem;margin-top:0.5rem;">
                           else f"{abs(gap):.1f}pp below world-class" if gap is not None else "N/A")
                 fa_str = f"{user_fa:.1f}%" if not np.isnan(user_fa) else "N/A"
                 st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1rem 1.25rem;">
+<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;padding:1rem 1.25rem;">
 <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.07em;color:#94a3b8;margin-bottom:0.5rem;">{industry}</div>
 <div style="font-size:0.72rem;color:#64748b;margin-bottom:0.5rem;">{desc}</div>
 <div style="display:flex;justify-content:space-between;align-items:flex-end;">
   <div><div style="font-size:0.65rem;color:#94a3b8;">World-class</div>
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:1.2rem;font-weight:600;color:#334155;">{wc}%</div></div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:1.2rem;font-weight:600;color:#cbd5e1;">{wc}%</div></div>
   <div style="text-align:right;"><div style="font-size:0.65rem;color:#94a3b8;">Your FA%</div>
   <div style="font-family:'IBM Plex Mono',monospace;font-size:1.2rem;font-weight:700;color:{color};">{fa_str}</div></div>
 </div>
@@ -629,9 +684,9 @@ padding:0.85rem 1rem;margin-top:0.5rem;">
         bias_dir = bm_metrics.get("bias_direction", "N/A")
         fa_str2 = f"{user_fa:.0f}%" if not np.isnan(user_fa) else "N/A"
         st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-left:4px solid {BLUE};
+<div style="background:#111827;border:1px solid #1e2d45;border-left:4px solid {BLUE};
 border-radius:10px;padding:1.25rem 1.5rem;">
-<div style="font-size:0.88rem;color:#334155;line-height:1.75;">
+<div style="font-size:0.88rem;color:#cbd5e1;line-height:1.75;">
 Based on your demand pattern (<b>{cv_class['label']}</b>, CV={profile['cv']*100:.1f}%) and holdout
 evaluation across <b>{n_holdout} periods</b>, <b>{bm_name}</b> performs best with a Vandeput Score
 of <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;">{vs_val:.2f} units</span>,
@@ -750,11 +805,11 @@ with tab3:
     sc1, sc2 = st.columns(2)
     with sc1:
         st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-left:4px solid {BLUE};border-radius:10px;padding:1.25rem 1.5rem;">
+<div style="background:#111827;border:1px solid #1e2d45;border-left:4px solid {BLUE};border-radius:10px;padding:1.25rem 1.5rem;">
 <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:0.25rem;">Safety Stock</div>
-<div style="font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:#0f172a;">{ss_res['ss']:,.0f} <span style="font-size:0.9rem;color:#94a3b8;">units</span></div>
+<div style="font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:#f1f5f9;">{ss_res['ss']:,.0f} <span style="font-size:0.9rem;color:#94a3b8;">units</span></div>
 <div style="font-size:0.75rem;color:#64748b;margin:0.3rem 0 0.75rem;">{service_level}% service level | {lead_time}-period lead time</div>
-<div style="background:#f8fafc;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#334155;line-height:1.9;">
+<div style="background:#f8fafc;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#cbd5e1;line-height:1.9;">
 SS = Z × sigma_D × sqrt(L)<br>
 SS = {z_str} × {rmse_val:.1f} × sqrt({lead_time})<br>
 SS = {z_str} × {rmse_val:.1f} × {np.sqrt(lead_time):.3f}<br>
@@ -764,11 +819,11 @@ SS = {z_str} × {rmse_val:.1f} × {np.sqrt(lead_time):.3f}<br>
 </div>""", unsafe_allow_html=True)
     with sc2:
         st.markdown(f"""
-<div style="background:#fff;border:1px solid #e2e8f0;border-left:4px solid {GREEN};border-radius:10px;padding:1.25rem 1.5rem;">
+<div style="background:#111827;border:1px solid #1e2d45;border-left:4px solid {GREEN};border-radius:10px;padding:1.25rem 1.5rem;">
 <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;margin-bottom:0.25rem;">Reorder Point</div>
-<div style="font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:#0f172a;">{ss_res['rop']:,.0f} <span style="font-size:0.9rem;color:#94a3b8;">units</span></div>
+<div style="font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:#f1f5f9;">{ss_res['rop']:,.0f} <span style="font-size:0.9rem;color:#94a3b8;">units</span></div>
 <div style="font-size:0.75rem;color:#64748b;margin:0.3rem 0 0.75rem;">Replenish when inventory falls to this level</div>
-<div style="background:#f8fafc;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#334155;line-height:1.9;">
+<div style="background:#f8fafc;border-radius:6px;padding:0.7rem 0.85rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:#cbd5e1;line-height:1.9;">
 ROP = D_bar × L + SS<br>
 ROP = {profile['mean']:.1f} × {lead_time} + {ss_res['ss']:.1f}<br>
 ROP = {profile['mean']*lead_time:.1f} + {ss_res['ss']:.1f}<br>
@@ -946,15 +1001,15 @@ with tab5:
         actions.append(f"Forecast accuracy of <b>{fa_final:.1f}%</b> is below the manufacturing world-class threshold of 80%. Recommend running a forecast value-add review. <em>(Vandeput, DFBP Ch. 12)</em>")
     if not actions:
         actions.append("Forecast performance is within acceptable bounds. Maintain current method and cadence.")
-    action_html = "".join(f'<li style="margin-bottom:0.6rem;font-size:0.85rem;color:#334155;">{a}</li>' for a in actions)
-    st.markdown(f'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem 1.5rem;"><ul style="margin:0;padding-left:1.25rem;line-height:1.8;">{action_html}</ul></div>', unsafe_allow_html=True)
+    action_html = "".join(f'<li style="margin-bottom:0.6rem;font-size:0.85rem;color:#cbd5e1;">{a}</li>' for a in actions)
+    st.markdown(f'<div style="background:#111827;border:1px solid #1e2d45;border-radius:10px;padding:1.25rem 1.5rem;"><ul style="margin:0;padding-left:1.25rem;line-height:1.8;">{action_html}</ul></div>', unsafe_allow_html=True)
 
     section("Export")
     summary_text = utils.generate_sopp_summary(
         profile, cv_class, season_info_s, trend_info,
         bm_key, bm_metrics, fc_tbl, ss_r, ac
     )
-    st.markdown(f'<div style="background:{NAVY};color:#f1f5f9;font-family:\'IBM Plex Mono\',monospace;font-size:0.75rem;line-height:1.7;padding:1.25rem;border-radius:10px;white-space:pre-wrap;">{summary_text}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="background:{NAVY};color:#0f1724;font-family:\'IBM Plex Mono\',monospace;font-size:0.75rem;line-height:1.7;padding:1.25rem;border-radius:10px;white-space:pre-wrap;">{summary_text}</div>', unsafe_allow_html=True)
     exp1, exp2 = st.columns(2)
     with exp1:
         st.download_button("Download Summary (.txt)", data=summary_text,
@@ -969,7 +1024,7 @@ with tab5:
 
 st.markdown(f"""
 <div style="margin-top:3rem;padding:1.25rem 1.75rem;background:{NAVY};border-radius:10px;
-font-size:0.68rem;color:#475569;line-height:1.9;text-align:center;">
+font-size:0.68rem;color:#94a3b8;line-height:1.9;text-align:center;">
   <span style="color:#93c5fd;font-weight:600;">Forecasting methods:</span>
   Hyndman & Athanasopoulos, Forecasting: Principles and Practice, 3rd ed. (OTexts, 2021) &nbsp;|&nbsp;
   <span style="color:#93c5fd;font-weight:600;">Accuracy metrics:</span>
@@ -978,6 +1033,6 @@ font-size:0.68rem;color:#475569;line-height:1.9;text-align:center;">
   Jain, Fundamentals of Demand Planning & Forecasting (Graceway, 2020) &nbsp;|&nbsp;
   <span style="color:#93c5fd;font-weight:600;">S&OP:</span>
   Crum & Palmatier, Demand Management Best Practices &nbsp;|&nbsp;
-  Built by <span style="color:#e2e8f0;font-weight:600;">Rutwik Satish</span> —
+  Built by <span style="color:#1e2d45;font-weight:600;">Rutwik Satish</span> —
   MS Engineering Management + Graduate Certificate in Supply Chain Engineering Management, Northeastern University
 </div>""", unsafe_allow_html=True)
