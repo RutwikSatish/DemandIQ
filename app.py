@@ -99,7 +99,7 @@ html, body, [class*="css"], .stApp {
 }
 </style>
 """
-    st.components.v1.html(css, height=0)
+    st.html(css)
 
 inject_css()
 
@@ -200,7 +200,7 @@ with st.sidebar:
         except Exception as ex:
             st.error(f"Could not read file: {ex}")
 
-    if st.button("Load Sample Data (Component-A)", use_container_width=True):
+    if st.button("Load Sample Data (Component-A)", width='stretch'):
         st.session_state["df"] = utils.SAMPLE_DATA.copy()
         st.success("Sample data loaded.")
 
@@ -312,7 +312,7 @@ This is the pre-loaded dataset used when you click <b>Load Sample Data</b>. It r
 (mean ~478 units, CV ~18%) and mild seasonality.
 </div>""", unsafe_allow_html=True)
         st.dataframe(sd.style.format({"Demand": "{:,.0f}"}),
-                     use_container_width=True, height=320, hide_index=True)
+                     width='stretch', height=320, hide_index=True)
 
     with col_chart:
         sma6 = pd.Series(demand_arr_preview).rolling(6).mean().values
@@ -332,7 +332,7 @@ This is the pre-loaded dataset used when you click <b>Load Sample Data</b>. It r
                                    font=dict(size=13, color="#334155")),
             xaxis_title="Period", yaxis_title="Demand (units)",
             **CHART)
-        st.plotly_chart(fig_preview, use_container_width=True)
+        st.plotly_chart(fig_preview, width='stretch')
 
     # Framework citations
     st.markdown(f"""
@@ -472,7 +472,7 @@ border-radius:10px;padding:1.25rem 1.5rem;">
         fig_decomp.update_layout(height=480, paper_bgcolor="rgba(0,0,0,0)",
                                   plot_bgcolor="#fff", font=dict(family="Inter", size=11, color="#334155"),
                                   margin=dict(l=40, r=20, t=40, b=20))
-        st.plotly_chart(fig_decomp, use_container_width=True)
+        st.plotly_chart(fig_decomp, width='stretch')
         insight("Decomposition separates demand into trend (direction), seasonal (repeating pattern), and residual (noise). If the seasonal panel shows a consistent repeating wave, use Holt-Winters.")
     else:
         alert("Seasonal decomposition requires at least 24 periods. Upload more data to enable this view.", "info")
@@ -485,7 +485,7 @@ border-radius:10px;padding:1.25rem 1.5rem;">
     fig_hist.add_trace(go.Scatter(x=list(range(n)), y=sma6, name="6-Period SMA",
                                    mode="lines", line=dict(color=AMBER, width=2.5, dash="dash")))
     fig_hist.update_layout(height=300, xaxis_title="Period", yaxis_title="Demand (units)", **CHART)
-    st.plotly_chart(fig_hist, use_container_width=True)
+    st.plotly_chart(fig_hist, width='stretch')
     insight("The 6-period moving average removes noise to reveal the underlying trend. React to sustained moves in the dashed line, not individual spikes.")
 
 
@@ -560,7 +560,7 @@ padding:0.85rem 1rem;margin-top:0.5rem;">
     fig_fc.add_vrect(x0=n_train-0.5, x1=n-0.5, fillcolor="rgba(27,110,243,0.06)",
                       line_width=0, annotation_text="Holdout", annotation_position="top left")
     fig_fc.update_layout(height=340, xaxis_title="Period", yaxis_title="Demand (units)", **CHART)
-    st.plotly_chart(fig_fc, use_container_width=True)
+    st.plotly_chart(fig_fc, width='stretch')
     insight("Compare forecast lines (coloured) to the black actual line in the shaded holdout window — the line that tracks actuals most closely here will likely produce the lowest Vandeput Score.")
 
     section("Holdout Accuracy — Ranked by Vandeput Score")
@@ -579,9 +579,9 @@ padding:0.85rem 1rem;margin-top:0.5rem;">
 
         styled = (display_df.style
                   .apply(lambda row: ["background:#f0fdf4;" if row.name == 0 else "" for _ in row], axis=1)
-                  .applymap(fa_style, subset=["FA%"])
+                  .map(fa_style, subset=["FA%"])
                   .format({"Vandeput Score":"{:.2f}","MAE":"{:.2f}","Bias":"{:.2f}","RMSE":"{:.2f}"}))
-        st.dataframe(styled, use_container_width=True)
+        st.dataframe(styled, width='stretch')
         cite("Vandeput Score = MAE + |Bias| (primary ranking metric, DFBP Ch. 8–9) | WMAPE = weighted MAE / total demand (handles near-zero, DFBP Ch. 9) | MAPE* displayed for reference only — do not use for ranking (DFBP Ch. 8 caution) | RMSE for safety stock only (FPP3 Ch. 5.8)")
 
         best_row = results_df.iloc[0]
@@ -711,7 +711,7 @@ with tab3:
         fig_fwd.add_hline(y=max_thresh, line_dash="dot", line_color=ORANGE,
                            annotation_text="Max Threshold", annotation_position="top right")
         fig_fwd.update_layout(height=380, xaxis_title="Period", yaxis_title="Demand (units)", **CHART)
-        st.plotly_chart(fig_fwd, use_container_width=True)
+        st.plotly_chart(fig_fwd, width='stretch')
         insight("Prediction intervals widen with horizon (sigma_h = RMSE × sqrt(h) — FPP3 Ch. 5.5). Red markers signal stockout risk — prioritise supply actions for those periods first.")
         cite("Note: Intervals assume normally distributed forecast errors. Treat as approximate for lumpy or intermittent demand.")
 
@@ -731,7 +731,7 @@ with tab3:
             "Zone": [{"red":"Stockout Risk","amber":"Overstock Risk","green":"Within Plan"}[z] for z in zone_colors]
         })
         st.session_state["fc_table"] = fc_table
-        st.dataframe(fc_table, use_container_width=True, hide_index=True)
+        st.dataframe(fc_table, width='stretch', hide_index=True)
 
     section("Safety Stock Calculator")
     bm = st.session_state.get("best_metrics", {})
@@ -806,7 +806,7 @@ with tab4:
         default_e = pd.DataFrame({"Period":list(range(1,7)),
                                    "Forecast":[450,470,430,490,510,480],
                                    "Actual":[420,490,410,520,495,500]})
-        tracker_df = st.data_editor(default_e, num_rows="dynamic", use_container_width=True,
+        tracker_df = st.data_editor(default_e, num_rows="dynamic", width='stretch',
                                      column_config={
                                          "Forecast": st.column_config.NumberColumn(min_value=0),
                                          "Actual":   st.column_config.NumberColumn(min_value=0)
@@ -844,7 +844,7 @@ with tab4:
                                  text=[f"{e:+.0f}" for e in errors_t], textposition="outside"))
         fig_wf.add_hline(y=0, line_width=1.5, line_color="#334155")
         fig_wf.update_layout(height=300, xaxis_title="Period", yaxis_title="Error (Actual − Forecast)", **CHART)
-        st.plotly_chart(fig_wf, use_container_width=True)
+        st.plotly_chart(fig_wf, width='stretch')
         insight("Blue bars (above zero) = under-forecast (stockout risk). Orange bars (below zero) = over-forecast (overstock risk). Persistent bars on one side indicate systematic bias requiring process correction.")
 
         section("Rolling Forecast Accuracy")
@@ -855,7 +855,7 @@ with tab4:
         fig_cum.add_hline(y=80, line_dash="dot", line_color=GREEN, annotation_text="Manufacturing WC 80%")
         fig_cum.add_hline(y=70, line_dash="dot", line_color=AMBER, annotation_text="High-tech WC 70%")
         fig_cum.update_layout(height=280, xaxis_title="Period", yaxis_title="Cumulative FA%", **CHART)
-        st.plotly_chart(fig_cum, use_container_width=True)
+        st.plotly_chart(fig_cum, width='stretch')
         insight("A declining trajectory means recent periods are being forecast less accurately — investigate whether demand patterns have shifted before next planning cycle.")
 
         section("Industry Benchmark Table")
@@ -870,7 +870,7 @@ with tab4:
             bmark_rows.append({"Industry": ind, "World-Class FA%": f"{wc}%",
                                 "Your FA%": f"{fa_val:.1f}%" if not np.isnan(fa_val) else "N/A",
                                 "Status": status})
-        st.dataframe(pd.DataFrame(bmark_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(bmark_rows), width='stretch', hide_index=True)
         cite("Source: Vandeput, DFBP Ch. 10 — Forecasting benchmarks by industry segment")
     else:
         alert("Enter forecast vs actual data above to compute accuracy metrics.", "info")
@@ -916,7 +916,7 @@ with tab5:
 
     section("Section 3 — Forward Outlook (Next 4 Periods)")
     if not fc_tbl.empty:
-        st.dataframe(fc_tbl.head(4)[["Period","Point Forecast","Lower 80%","Upper 80%","Zone"]], use_container_width=True, hide_index=True)
+        st.dataframe(fc_tbl.head(4)[["Period","Point Forecast","Lower 80%","Upper 80%","Zone"]], width='stretch', hide_index=True)
         cite("Source: FPP3 Ch. 5.5 — Prediction intervals from residual std deviation, assuming normally distributed errors.")
     else:
         alert("Run Tab 3 (Forward Forecast) to populate this section.", "info")
@@ -958,12 +958,12 @@ with tab5:
     exp1, exp2 = st.columns(2)
     with exp1:
         st.download_button("Download Summary (.txt)", data=summary_text,
-                            file_name="demandiq_sopp.txt", mime="text/plain", use_container_width=True)
+                            file_name="demandiq_sopp.txt", mime="text/plain", width='stretch')
     with exp2:
         csv_parts = ["=== FORWARD FORECAST ==="]
         if not fc_tbl.empty: csv_parts.append(fc_tbl.to_csv(index=False))
         st.download_button("Download Analysis (.csv)", data="\n".join(csv_parts),
-                            file_name="demandiq_analysis.csv", mime="text/csv", use_container_width=True)
+                            file_name="demandiq_analysis.csv", mime="text/csv", width='stretch')
 
 # ─── FOOTER ──────────────────────────────────────────────────────────────────
 
